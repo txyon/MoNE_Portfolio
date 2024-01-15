@@ -1,11 +1,25 @@
 ## Hey! Is this thing on?
 ### Space based object detection optimisation with neuromorphic cameras
 
-The aim of this expriment was to track what effects manipulating the biases of a neuromorphic camera had on object detection in an adverse lighting simulation set up to replicate a star cluster in the night sky. 
+This experiment aimed to track the effects of manipulating a neuromorphic camera's biases on object detection in an adverse lighting simulation replicating a star cluster in the night sky.
+The set-up placed a neuromorphic camera on a GRBL-controlled carriage driven by stepper motors, which was then programmed to sweep over a simulated star field in a "Darkroom."
+The starfield consisted of fibre optic strands to replicate stars. To add variance in sizes and illumination of the "stars", different-sized holes were drilled into a plywood board. The hole configurations with corresponding stands were:
+| Hole Size | Strands |
+|----------|----------|
+| 0.7mm    |     1    |
+| 0.9mm    |     2    |
+| 1.0mm    |     3    |
+| 1.3mm    |     4    |
+| 1.5mm    |     5    |
+| 2.0mm    |     6    |
+| 2.2mm    |     7    |
+| 3.2mm    |     8    |
+| 3.75mm   |     9    |
 
-The set up placed a neuromorphic camera on a GRBL controlled carrige driven by stepper motors and was then programmed to sweep over a simulated star field in a "Dark Room" 
+Thick 13mm plywood was used to provide a support for the strands as they were fed into the holes. This support held the fibres perpendiular to the top face of the board and parrellel with the lens on the camera.
 
-The starfield was made using fibre optic strands to replicate stars. This allowed for multiple strands to be grouped together in order to offer various sizes and illumination strengths. The fibres were feed into a thick predrilled plywood in order to support a good portion of the end to make sure light was perpendicular to the top face of the board.
+
+
 
 
 
