@@ -16,6 +16,15 @@ The starfield consisted of fibre optic strands to replicate stars. To add varian
 | 3.2mm    |     8    |
 | 3.75mm   |     9    |
 
+<p align="center">
+  <img src="Undersizeoptics.jpg" alt="Under side of plywood showing lighting configuration" style="width:300px;" />
+</p>
+
+
+
+
+
+
 Thick 13mm plywood was used to provide a support for the strands as they were fed into the holes. This support held the fibres perpendiular to the top face of the board and parrellel with the lens on the camera.
 
 
