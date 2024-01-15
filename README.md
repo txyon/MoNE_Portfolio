@@ -1,8 +1,9 @@
 ## Hey! Is this thing on?
-### Space based object detection optimisation with neuromorphic cameras
+### Space-based object detection optimisation with neuromorphic cameras
 
 This experiment aimed to track the effects of manipulating a neuromorphic camera's biases on object detection in an adverse lighting simulation replicating a star cluster in the night sky.
 The set-up placed a neuromorphic camera on a GRBL-controlled carriage driven by stepper motors, which was then programmed to sweep over a simulated star field in a "Darkroom."
+
 <p align="center">
   <img src="ExperimentSetup.jpg" alt="Experimental Setup" style="width:400px;" />
 </p>
@@ -28,12 +29,10 @@ The starfield consisted of fibre optic strands to replicate stars. To add varian
   <img src="SimulatedStarfield.jpg" alt="Simulated starfield" style="width:400px;" />
 </p>
 
+A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board and parallel with the lens on the camera.
 
+The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. These manual operations were not efficient or consistent, as the lighting from the computer monitor constantly altered the illumination levels in the room. This change caused irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera.
 
-
-
-
-Thick 13mm plywood was used to provide a support for the strands as they were fed into the holes. This support held the fibres perpendiular to the top face of the board and parrellel with the lens on the camera.
 
 
 
