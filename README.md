@@ -66,6 +66,13 @@ if c == ord("g"):
 ```
 
 ### V2 Code
+Moving forward it was important to incorpirate a full automation process and improved efficency. To achieve this the new code incorpirated a state machine. the state machine allowed the program to constantly run looking only for changes in variable flags that would be set/reset depending on what stage the process the system was in.
+Communication via the camera was now done via the neuromorphic_drivers module (https://github.com/neuromorphicsystems/neuromorphic-rs) which when recording packets from the camera would be stored in an array then written to a csv file while at the same time the sytem was returning to its home location ready for another recording. 
+The code is programmed to do a single bias recording at a time (diff_off or diff_on) and starting at the greatest threshold for both (255) the bias of interest is reduced by 1 each pass untill either the bias reached 1 or a timeout error would occur. The timeout error is caused by excess data too large for the usb to transfer. This error would always flag as the biases approached 1 as each bias reducion would result in pixels becoming more and more sensitive often causing hot pixels.
+
+
+
+
 
 
 
