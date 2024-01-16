@@ -1,7 +1,11 @@
 ## Hey! Is this thing on?
 ### Space-based object detection optimisation with neuromorphic cameras
 
-This experiment aimed to track the effects manipulating a neuromorphic camera's biases had on object detection in an adverse lighting simulation replicating a star cluster in the night sky. The set-up placed a neuromorphic camera on a GRBL-controlled carriage driven by stepper motors, which was then programmed to sweep over a simulated star field in a "Darkroom."
+This experiment aimed to track the effects manipulating a neuromorphic camera's biases had on object detection. The concept was to either have a neuromorphic camera move move acrross a replicated star cluster or visa versa in a controled low light enviroment. 
+
+
+
+The set-up placed a neuromorphic camera on a GRBL-controlled carriage driven by stepper motors, which was then programmed to sweep over a simulated star field in a "Darkroom."
 
 <p align="center">
   <img src="ImagePlots/ExperimentSetup.jpg" alt="Experimental Setup" style="width:400px;" />
