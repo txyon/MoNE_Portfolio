@@ -1,9 +1,9 @@
 ## Hey! Is this thing on?
 ### Space-based object detection optimisation with neuromorphic cameras
 
-This experiment aimed to track the effects manipulating a neuromorphic camera's biases had on object detection. The concept was to either have a neuromorphic camera move acrross a replicated star cluster or visa versa in a controled low light enviroment. The initial proposal for this design had a fixed camera mounted in the center of two rings as seen below in Figure 1 (Left). The concept was inner ring would have a star pattern drilled into it then when installed two light sources mounted between the first and second ring are orintated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create movement across the camera sensor. This design was not choosen due to its complexity of recreating an accurate star map on the curved surface and a limitation of room restriced by the size of the inner ring.
+This experiment aims to track the effects manipulating a neuromorphic camera's biases had on object detection. The concept was to either have a neuromorphic camera move acrross a replicated star cluster or visa versa in a controled low light enviroment. The initial proposal for this design had a fixed camera mounted in the center of two rings as seen below in Figure 1 (Left). The concept was inner ring would have a star pattern drilled into it then when installed two light sources mounted between the first and second ring are orintated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create movement across the camera sensor. This design was not choosen due to its complexity of recreating an accurate star map on the curved surface and a limitation of room restriced by the size of the inner ring.
 
-A redesign on the orginal concept led to what is now the final design. The design allowed for versitility in mounting options and fully adjustable heights. These improvements also allowed the starmap to projected on a flat surface meaning recreation was much simpler. 
+A redesign on the orginal concept led to what is now the final design. The design allowed for versitility in mounting options and adjustable heights. These improvements also allowed the starmap to projected on a flat surface meaning recreation was much simpler. 
 
 <figure>
   <p align="center">
@@ -13,12 +13,23 @@ A redesign on the orginal concept led to what is now the final design. The desig
   <figcaption align="center">Figure 1: Left: Initial concept. Right: Final Design.</figcaption>
 </figure>
 
-One of the techniques taught in the neuromorphic sensing unit was lens selection 
+One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table that covers 3 different lenses and each at three differnt rudimentry distances from the star map. As the camera would be passing over the "stars" in the y direction it was important to tune the physical dimensions to this. Ideally the single stand light should show as a single pixel. With this assumption using the stands thickness of 0.4mm a desired FOV in the y direction is calculated by multipling 0.4 by 720 (sensor pixel height) returning 288mm. The distance between the lens and lights could not be tuned to achive a measurement as close to this. The actual FOV achiced on the y axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments. 
+| Lens | Distance(mm) | Height(mm) | Width(mm) |
+|------|--------------|------------|-----------|
+| 8mm  |     500      |    267     |    356    |
+| 8mm  |     1000     |    534     |    712    |
+| 8mm  |     1500     |    801     |    1068   |
+| 10mm |     500      |    213     |    285    |
+| 10mm |     1000     |    427     |    570    |
+| 10mm |     1500     |    641     |    855    |
+| 12mm |     500      |    178     |    237    |
+| 12mm |     1000     |    356     |    475    |
+| 12mm |     1500     |    534     |    712    |
   
 The set-up placed a neuromorphic camera on a GRBL-controlled carriage driven by stepper motors, which was then programmed to sweep over a simulated star field in a "Darkroom."
 
 <p align="center">
-  <img src="ImagePlots/ExperimentSetup.jpg" alt="workingdesign" style="width:400px;" />
+  <img src="ImagePlots/workingdesign.jpg" alt="Working Design" style="width:550px;" />
 </p>
 
 The starfield consisted of fibre optic strands to replicate stars. To add variance in sizes and illumination of the "stars", different-sized holes were drilled into a plywood board. The hole configurations with corresponding stands were:
