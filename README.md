@@ -1,9 +1,9 @@
 # Hey! Is this thing on? Space-based object detection optimisation with neuromorphic cameras
 
 ## Design, Hardware and Control
-This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to either have a neuromorphic camera move acrross a replicated star cluster or visa versa in a controled low light enviroment. The initial proposal for this design had a fixed camera mounted in the center of two rings as seen below in Figure 1 (Left). The concepts inner ring would have a star pattern drilled into it. Two light sources are mounted between the first and second rings and are orintated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create events across the camera sensor. This design was not choosen due to its complexity of recreating an accurate star map on the curved surface and a limitation of room restriced by the size of the inner ring.
+This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below in Figure 1 (Left). The concept's inner ring would have a star pattern drilled into it. Two light sources are mounted between the first and second rings and are orientated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create events across the camera sensor. Due to its complexity of recreating an accurate star map on the curved surface and the limitation of the room being restricted by the size of the inner ring, this design was inadequate.
 
-A redesign on the orginal concept led to what is now the final design. The design allowed for versitility in mounting options and adjustable heights. These improvements also allowed the starmap to projected on a flat surface meaning recreation was much simpler. 
+A redesign of the original concept led to the final design. The design allowed for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected on a flat surface, meaning recreation was much more straightforward.
 
 <figure>
   <p align="center">
@@ -15,7 +15,7 @@ A redesign on the orginal concept led to what is now the final design. The desig
 
 .
 
-One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table that covers 3 different lenses and each at three differnt rudimentry distances from the star map. As the camera would be passing over the "stars" in the y direction it was important to tune the physical dimensions to this. Ideally the single stand light should show as a single pixel. With this assumption using the stands thickness of 0.4mm a desired FOV in the y direction is calculated by multipling 0.4 by 720 (sensor pixel height) returning 288mm. The distance between the lens and lights could not be tuned to achive a measurement as close to this. The actual FOV achiced on the y axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments. 
+One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table covering three different lenses at three different rudimentary distances from the star map. As the camera would be passing over the "stars" in the y direction, it was necessary to tune the physical dimensions to this. Ideally, the single stand light should show as a single pixel. With this assumption, using the stand thickness of 0.4mm, a desired FOV in the y direction is calculated by multiplying 0.4 by 720 (sensor pixel height), returning 288mm. The distance between the lens and lights could not be tuned to achieve a measurement as close to this. The actual FOV achieved on the y-axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments.
 
 | Lens | Distance(mm) | Height(mm) | Width(mm) |
 |------|--------------|------------|-----------|
@@ -29,13 +29,14 @@ One of the techniques taught in the neuromorphic sensing unit was lens selection
 | 12mm |     1000     |    356     |    475    |
 | 12mm |     1500     |    534     |    712    |
 
-The driving hardware selected for this project is a ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and a arduino CNC shield with DRV8825 High Current Drivers. The CNC steppers were controlled using GRBL sending G-code commands within the python recorder.py  scripts. These commands could be send as a single line in code or calling a multi-line g-code file. 
+The driving hardware selected for this project is an ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and an Arduino CNC shield with DRV8825 High Current Drivers. The CNC steppers were controlled using GRBL, sending G-code commands within the python recorder.py scripts. These commands could be sent as a single line in code or called a multi-line g-code file.
 
-Below is an example of a single line instruction. In this example the carrige is sent the command over serial using ser.write to move from its current position to using G01 which is a linear (straight line movement), at a feed rate (Speed) of F3000 mm/min to location X200. No Y position is included in this command so the current Y value is held. 
+Below is an example of a single-line instruction. In this example, the carriage is sent the command over serial using ser. write to move from its current position to using G01, a linear (straight line movement), at a feed rate (Speed) of F3000 mm/min to location X200. No Y position is included in this command, so the current Y value is held.
+
 ```py
     ser.write(("G01 F3000 X200" +"\n").encode())# Send sinle line command to GRBL to move camera to X200  
 ```
-In order to send a multi-line g-code file over GRBL the file needs to be opened then read line be line. While running each line the command is sent using the same ser.write as the example above. A brief wait of 100ms occurs between each line allowing the arduino to proccess and send the command. Below is the code from recorder.py which runs the homing cycle for the CNC. 
+In order to send a multi-line g-code file over GRBL, the file needs to be opened and read line by line. While running each line, the command is sent using the same user. Write as the example above. A brief wait of 100ms occurs between each line, allowing the Arduino to process and send the command. Below is the code from recorder.py, which runs the homing cycle for the CNC.
 ```py
 with open('WorkingFolderV3\gcode\homing.gcode', 'r') as f:
     for line in f:                          # Read each line consecutively from gcode file
@@ -43,7 +44,7 @@ with open('WorkingFolderV3\gcode\homing.gcode', 'r') as f:
         ser.write((line + "\n").encode())   # Send line information to GRBL to excute
         time.sleep(0.1)                     # Wait 100ms to send next line 
 ```
-As called in the code snippet above, below is the homing.gcode file. 4 commands 
+Below is the homing. gcode file called above. 4 commands are saved, which prepare the CNC once the script is first run. These commands reset the limits and positioning of the carriage and set it to its "Ready" state.
 ```
 $H            % Start homing cycle
 G92 X0 Y0     % Set work-coordinate offset
@@ -51,7 +52,7 @@ G90           % Absolute values
 G00 X750Y700  % move to starting location
 ```
   
-The image below shows preliminary testing once frame was set up.
+The image below shows preliminary testing once the frame was set up.
 
 <p align="center">
   <img src="ImagePlots/workingdesign.jpg" alt="Working Design" style="width:550px;" />
