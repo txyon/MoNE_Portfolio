@@ -59,8 +59,9 @@ The image below shows preliminary testing once the frame was set up.
 </p>
 
 ## Star Field
+The star field for this concept is designed on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands being inserted into plywood to replicate the same star pattern. To add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes alloed multiple strands to be inserted to giving the impression of larger/brighter stars. It was important during this step to replicate the ground truth as close as possible to ensure the best chance of optimal optimisation. 
 
-The starfield consisted of fibre optic strands to replicate stars. To add variance in sizes and illumination of the "stars", different-sized holes were drilled into a plywood board. The hole configurations with corresponding stands were:
+The hole configurations with corresponding stands is outlined in the table below:
 
 | Hole Size | Strands |
 |----------|----------|
@@ -74,15 +75,32 @@ The starfield consisted of fibre optic strands to replicate stars. To add varian
 | 3.2mm    |     8    |
 | 3.75mm   |     9    |
 
-<p align="center">
-  <img src="ImagePlots/Undersizeoptics.jpg" alt="Under side of plywood showing lighting configuration" style="width:550px;" />
-</p>
+A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board, holding the lighting surface parallel with the lens on the camera reducing visual errors. The following images show the underside and top of the plywood housing the optic strands. On the left, the underside of the ply shows the distribution and sizing of the holes and stand placement. The right shows the final "Star" layout used in the experiments.
 
-<p align="center">
-  <img src="ImagePlots/SimulatedStarfield.jpg" alt="Simulated starfield" style="width:550px;" />
-</p>
+<figure>
+  <p align="center">
+    <img src="ImagePlots/Undersizeoptics.jpg" alt="Underside plywood" style="height: 300px;">
+    <img src="ImagePlots/SimulatedStarfield.jpg" alt="Finished replication" style="height: 300px;">
+  </p>
+  <figcaption align="center">Figure 1: Left: Underside of plywood, strand distribution. Right: Final "Star" result.</figcaption>
+</figure>
 
-A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board and parallel with the lens on the camera.
+In order to test the accuracy of the replication compared to the ground truth both images were run through astrometry.net (https://nova.astrometry.net/), a website that takes an uploaded image and locates its origin in the sky. As expected the ground truth capture positioned in the expected origin location. When processing the replication search time was longer but it was located and copies the location of orginial. Side by side these images can be told apart with the replecation lacking the enviromental noise that the original has. The next three images show the orgin with the real and fake overlayed and one of the origin by itself.
+
+<figure>
+  <p align="center">
+    <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 350px;">
+    <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 350px;">
+  </p>
+  <figcaption align="center">Figure 1: Left: Ground truth. Right: Replicated "Star" field.</figcaption>
+</figure>
+
+<figure>
+  <p align="center">
+    <img src="ImagePlots/origin.JPG" alt="Image 1" style="height: 400px;">
+  </p>
+  <figcaption align="center">Figure 1: Origin in the sky.</figcaption>
+</figure>
 
 ### Prototype code
 The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. These manual operations were not efficient or consistent, as the lighting from the computer monitor constantly altered the illumination levels in the room. This change caused irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera. The code for the prototye was built on the PSEE413 platform and used threads to monitor and accept input changes. In the example below, while the connection to the camera was live the "6" button could be pressed and providing the th_off Bias was larger than one, it would be reduced. 
