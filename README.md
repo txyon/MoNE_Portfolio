@@ -33,7 +33,7 @@ A piece of 13mm thick plywood supported the strands as they were fed into the ho
 
 ### Prototye code
 The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. These manual operations were not efficient or consistent, as the lighting from the computer monitor constantly altered the illumination levels in the room. This change caused irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera. The code for the prototye was built on the PSEE413 platform and used threads to monitor and accept input changes. In the example below while the connection to the camera was live the "6" button could be pressed and providing the th_off bias was greater than 1 it would be reduced. 
-```
+```py
     if c == ord("6") and th_off > 1:
             th_off -= 1
             camera.set_parameters(
@@ -47,7 +47,7 @@ The prototype file located in the "Old Work V1" folder was used for initial test
             )
 ```
 This code did evolve to incorpirate some automation which allowed by pushing the "g" button the system would start recording, move, finish recording after the count condition was met and reset. Each time the "g" button was pressed the bias would also shift by 1 as seen below.
-```
+```py
     if c == ord("g"):
             #ser.write(("G00 X10Y10" + "\n").encode()) 
             th_off += 1
@@ -74,7 +74,7 @@ The code is programmed to do a single bias recording at a time (diff_off or diff
 
 The code below shows a snippet of the state machine where the script will just continue to roll over the if statements waiting for the the corresponding flag to be raised. For instance during the recording phase the flag recording will be equal to 1. Therefore each time the script runs over "if recording == 1:" the packets are then loaded into the array "packetdata". The point of this code is for the machine to not have heavy operations to carry out. Instead multiple easy tasks are provided. 
 
-```
+```py
     if recording == 1:
         if 'dvs_events' in packet:
             packetdata.extend(packet['dvs_events'])
@@ -132,7 +132,7 @@ The plots above offer some intersting insights into how the bias effect file siz
 ### Current working files
 In an effert to further impove efficency the v2 code was modified to to save data straight from the camera in a RAW format. This allowed an additional 4 recordings prior to the timeout error. The benifit of this code is that it further simplified the script reducing the lines of code by approximatly 30. The script during the recording phase seen below is now simply writes the packet data straight to the RAW file then when recording is done closes the output. A new file is then generated and data can be written again. This has removed the need to fill an array, then convert the array to csv.
 
-```
+```py
     if recording == 1:                              # If recording is set
     output.write(packet)                        # Write packet data to current open output file
 ```
