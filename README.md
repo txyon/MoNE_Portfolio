@@ -95,6 +95,7 @@ In order to test the accuracy of the replication compared to the ground truth bo
   <figcaption align="center">Figure 1: Left: Ground truth. Right: Replicated "Star" field.</figcaption>
 </figure>
 
+
 <figure>
   <p align="center">
     <img src="ImagePlots/origin.JPG" alt="Image 1" style="height: 400px;">
@@ -102,20 +103,26 @@ In order to test the accuracy of the replication compared to the ground truth bo
   <figcaption align="center">Figure 1: Origin in the sky.</figcaption>
 </figure>
 
-### Prototype code
-The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. These manual operations were not efficient or consistent, as the lighting from the computer monitor constantly altered the illumination levels in the room. This change caused irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera. The code for the prototye was built on the PSEE413 platform and used threads to monitor and accept input changes. In the example below, while the connection to the camera was live the "6" button could be pressed and providing the th_off Bias was larger than one, it would be reduced. 
-``` py
-    if c == ord("6") and th_off > 1:
-            th_off -= 1
-            camera.set_parameters(
-                psee413.Parameters(
-                    biases = psee413.Biases(
-                        diff_on = th_on,
-                        diff = diff,
-                        diff_off = th_off,
-                    )
+## Camera
+The camera used for recordings was the Prophesee EVK4. The EVK4 is a neuromorphic camera with a sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in the way they record data as they detect illuminaton changes aschroynsly at each pixel and return an event with a polarity of either 0 or 1. thes polarities tell if the pixel had a off event (0) where the light on the pixel was reduced frim its current baseline or a on event (1) which is an increase of light acriss the oixel. 
+
+The thresholds that determin if the change in light intensity at the pixel warrants an on/;off event are able to be customised. These settings are refered to as Diff_on and Diff_off bias settings, by reducing the threshold the sensor/pixel become increasingly more sensitive as a smaller differene in illumination now causes an event to occur.
+
+## Prototype code
+### V1 Code
+The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room and manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent, as the lighting from the computer monitor constantly altered the illumination levels in the room causing irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera. The code for the prototye was built on the PSEE413 platform and used threads to monitor and accept input changes. In the example below, providing the connection to the camera was live the "6" button could be pressed and providing the th_off Bias was larger than one, it would be reduced. 
+```py
+if c == ord("6") and th_off > 1:          # "Look" for an input command from the 6 buttoon and th_off is greater than 1 
+        th_off -= 1                       # Reduce th_off by 1
+        camera.set_parameters(            # Open the camera and psee413 parameters of the of the camera and load new th_off values
+            psee413.Parameters(
+                biases = psee413.Biases(
+                    diff_on = th_on,
+                    diff = diff,
+                    diff_off = th_off,
                 )
             )
+        )
 ```
 This code did evolve to incorpirate some automation which allowed by pushing the "g" button the system would start recording, move, finish recording after the count condition was met and reset. Each time the "g" button was pressed, the Bias would shift by 1 as seen below.
 ```py
