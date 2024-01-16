@@ -1,14 +1,24 @@
 ## Hey! Is this thing on?
 ### Space-based object detection optimisation with neuromorphic cameras
 
-This experiment aimed to track the effects manipulating a neuromorphic camera's biases had on object detection. The concept was to either have a neuromorphic camera move move acrross a replicated star cluster or visa versa in a controled low light enviroment. 
+This experiment aimed to track the effects manipulating a neuromorphic camera's biases had on object detection. The concept was to either have a neuromorphic camera move acrross a replicated star cluster or visa versa in a controled low light enviroment. The initial proposal for this design had a fixed camera mounted in the center of two rings as seen below in Figure 1 (Left). The concept was inner ring would have a star pattern drilled into it then when installed two light sources mounted between the first and second ring are orintated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create movement across the camera sensor. This design was not choosen due to its complexity of recreating an accurate star map on the curved surface and a limitation of room restriced by the size of the inner ring.
 
+A redesign on the orginal concept led to what is now the final design. The design allowed for versitility in mounting options and fully adjustable heights. These improvements also allowed the starmap to projected on a flat surface meaning recreation was much simpler. 
 
+<figure>
+  <p align="center">
+    <img src="ImagePlots/FirstDesign.JPG" alt="Image 1" style="height: 350px;">
+    <img src="ImagePlots/FinalDesign.JPG" alt="Image 2" style="height: 350px;">
+  </p>
+  <figcaption align="center">Figure 1: Left: Initial concept. Right: Final Design.</figcaption>
+</figure>
 
+One of the techniques taught in the neuromorphic sensing unit was lens selection 
+  
 The set-up placed a neuromorphic camera on a GRBL-controlled carriage driven by stepper motors, which was then programmed to sweep over a simulated star field in a "Darkroom."
 
 <p align="center">
-  <img src="ImagePlots/ExperimentSetup.jpg" alt="Experimental Setup" style="width:400px;" />
+  <img src="ImagePlots/ExperimentSetup.jpg" alt="workingdesign" style="width:400px;" />
 </p>
 
 The starfield consisted of fibre optic strands to replicate stars. To add variance in sizes and illumination of the "stars", different-sized holes were drilled into a plywood board. The hole configurations with corresponding stands were:
