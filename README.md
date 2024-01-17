@@ -115,7 +115,7 @@ In a neuromorphic camera, each pixel has a stored log intensity (Image below lef
 ### V1 Code
 The prototype file in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons as they were pushed and the computer's monitor constantly altered the room's illumination levels, causing irregular recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera presenting as vibrations, causing the pixels to oscillate on and off constantly. 
 
-The code for the prototype was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This code was available when the camera was in a real-time live-view state. During this time, if no other instructions were running, pressing the "6" button would execute the commands provided th_off was greater than 1. The commands would reduce th_off by one and then set the updated diff_off value by accessing the bias parameters in PSEE413. 
+The code for the prototype was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This code was available when the camera was in a real-time live-view state. If no other instructions were running during this time, pressing the "6" button would execute the commands provided th_off was greater than 1. The commands would reduce th_off by one and then set the updated diff_off value by accessing the bias parameters in PSEE413. 
 ```py
 if c == ord("6") and th_off > 1:          # "Look" for an input command from the 6 button and confirm th_off is greater than 1 
         th_off -= 1                       # Reduce th_off by 1
@@ -149,7 +149,7 @@ Following the proof of concept, an attempt was made to incorporate some automati
     
     count = 0                                    # reset counter to 0
 ```
-This semi-automated process still had ongoing flaws requiring human interaction at each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an efficiency issue with the code. The code would often become interlocked between 2 steps or run instructions out of order. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need resetting. This reset would also reset the saved log intensity value that had been conditioned to the room. From testing, the first 1-2 recordings post rest would have additional noise as pixels returned to a normalised state. 
+This semi-automated process still had ongoing flaws requiring human interaction at each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an efficiency issue with the code. The code would often become interlocked between 2 steps or run instructions out of order. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need resetting. This reset would also reset the saved log intensity value conditioned to the room. From testing, the first 1-2 recordings post rest would have additional noise as pixels returned to a normalised state. 
 
 ### V2 Code
 Moving forward, it was essential to incorporate an entire automation process, improve efficiency in recording consistency, and reduce the time to complete a full data set (from 255 > 0). To achieve this, a new code was developed using a state machine's design, which also operates asynchronously. The state machine allowed the program to constantly run, looking only for Boolean changes in variable flags that would be 1 or 0, depending on the stage of the system's process. 
@@ -158,7 +158,7 @@ Communication via the camera was now done via the neuromorphic_drivers module (h
 
 The code is designed to do a single bias recording at a time (diff_off or diff_on). Starting at the greatest threshold (255), the Bias is reduced by one each pass until either it reaches one (this is user-defined) or a timeout error occurs. The timeout error is caused by excess data being too large for the USB to transfer. This error would permanently be flagged as the biases approached one, as each bias reduction would result in pixels becoming more and more sensitive, causing hot pixels. 
 
-The code below shows a small portion (2 states) of the state machine. The script continuously rolls over each if statement, waiting for the corresponding flag to be raised. For instance, the flag recording will be equal to 1 during the recording phase. Therefore, each time the script runs over the first line "if recording == 1:" the packets are loaded into the array "packetdata". The point of this code is for the machine not to have heavy operations to carry out so that much processing can be put into the transfer of data. However, writing events to an array and then to a list became exponentially more burdensome because of the increasing data-filling "reclist" for each iteration.
+The code below shows a small portion (2 states) of the state machine. The script continuously rolls over each if statement, waiting for the corresponding flag to be raised. For instance, the flag recording will equal one during the recording phase. Therefore, each time the script runs over the first line "if recording == 1:" the packets are loaded into the array "packetdata". The point of this code is for the machine not to have heavy operations to carry out so that much processing can be put into the transfer of data. However, writing events to an array and then to a list became exponentially more burdensome because of the increasing data-filling "reclist" for each iteration.
 
 ```py
     if recording == 1:                                    # check recording status 
@@ -169,7 +169,7 @@ The code below shows a small portion (2 states) of the state machine. The script
         fname = f"off_{configuration.biases.diff_off}_on_{configuration.biases.diff_on}"  # create file name
         reclist[fname] = packetdata                       # add packet data array into reclist
 
-        configuration.biases.diff_on -= 1                 # reduce diff_on by 1 
+        Configuration. biases.diff_on -= 1                 # reduce diff_on by 1 
         device.update_configuration(configuration)        # apply new diff_on changes to camera
         print(configuration.biases.diff_on)               # confirmation printed to terminal of newly written bias value
         save = 0                                          # reset save 
@@ -307,14 +307,14 @@ with nd.open(raw=True) as device:
     print('done')                                           # Programed finished
 ```
 ## Interesting Data
-Below are 4 line graphs comparing bias setting to file size:
+Below are 4 line graphs comparing the Bias setting to file size:
   - First is diff_off bias setting 255 > 156.
   - Second is diff_off 155 > 48.
   - Third is diff_on 255 > 156.
   - Fourth is diff_on 155 > 43
 
-Interstingly the line graph for diff_off starts decreaseing till it reaches 134 then slowly rises until it gets a hot pixel at 55 (This was a constant occurance accross 3 datasets). This was unexpected as the belief was for the line to be somewhat linear till hot pixels were detected similar to what is observed in the diff_on graphs. 
-The hot pixel characteristics of on vs off were also interesting. As displayed in the graphs off had a sudden single pixel with over a million events. This differed from the on hot pixels where they slowy grew as the bias changed. The first instance of a hot pixel in the on bias was when it was set to 70 but it started off with only a hunderd more events then the rest and slowly grew.  
+Interestingly, the line graph for diff_off starts decreasing till it reaches 134, then slowly rises until it gets a hot pixel at 55 (This was a constant occurrence across three datasets). This valley was unexpected as the belief was for the line to be somewhat linear till hot pixels were detected, similar to what was observed in the diff_on graphs. 
+The hot pixel characteristics of on vs off were also interesting. As displayed in the graphs, diff_off had a sudden single pixel with over a million events, differing from the diff_on hot pixels that slowly grew as the Bias changed. The first instance of a hot pixel in the diff_on Bias was when it was set to 70, but it started with only a hundred more events than the rest and slowly grew.  
 
 ### Diff_off File size (MB) vs Bias
 <p align="center">
@@ -332,30 +332,42 @@ The hot pixel characteristics of on vs off were also interesting. As displayed i
   <img src="ImagePlots/Diff_On_File_Size_155_43.png" alt="Experimental Setup" style="width:100%;" />
 </p>
 
+A hot pixel detector and filter were constructed to analyse the data in these recordings and provide the following results. Below is a section of untouched events from diff_off 55 after being processed. Immediately, attention is drawn to the upper right graph where a single line can be seen with 1.5 million off events, a hot pixel. This pixel also causes the sensor data array on the top left black, except for a single pixel. There is some rudimentary filtering in this section to remove the hot pixel, and the results are seen in the bottom plots. On the bottom right is the sensor data, filling each pixel with events. On the right is the filtered flattened plot, which still shows the off events to have more weight, which is expected with such a vast difference in the bias settings. 
 
+<p align="center">
+  <img src="ImagePlots/prefilthot.png" alt="Experimental Setup" style="width:100%;" />
+</p>
 
+Below is the time surface for the unfiltered events. The single line seen is the hot pixel being shifted at each iteration when, in fact, it is on a single pixel and not moving separately to the camera.
 
+<p align="center">
+  <img src="ImagePlots/pretshot.png" alt="Experimental Setup" style="width:100%;" />
+</p>
 
+Filtering takes place using the code below, which initially samples the first 1000 events for more than one on a single pixel. These x and y locations are then removed from the CSV, and a second filtering segment runs, which accounts for the whole file. The second filter removes any pixel with more hits than the total number of events in the file multiplied by 0.005%.
+The results from this filter are below:
+```
+29944689
+     x    y  count
+0  309  546    993
+613538
+```
+The first line (29944689) is the amount of events in the unfiltered file. The second and third lines are the returned results of the first 1000 events check. The hot pixel was responsible for 993 out of the first 1000. Finally, the fourth line shows the remaining events after filtering. 
 
+<p align="center">
+  <img src="ImagePlots/postfilthot.png" alt="Experimental Setup" style="width:100%;" />
+</p>
 
+The plots above show the filtered event data on each pixel for the entire file. The new flattened event count is on the right, with no hot pixel detected. Below is the filtered time surface, which shows the stars in position. The on events are not as noticeable in this example as the Bias is set to 255.
 
+<p align="center">
+  <img src="ImagePlots/posttshot.png" alt="Experimental Setup" style="width:100%;" />
+</p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Attached below is a link to a dataset containing a complete set of on and off recordings in both CSV and ES form. Referencing this and the file size graphs should allow for predetermined Bias starting points when observing stars/satellites. Depending on the detail needed in the recording using the results above, a tuning on Bias until performance is achieved, then off can be tuned to any setting under the hot pixel threshold, which may vary by camera.
 
 ### Dataset
 
-.ES and csv files are avaliable using the link below. There are files for both Diff_On and Diff_Off in raw form and also as a zipped file.
+.ES and CSV files are available using the link below. There are files for both Diff_On and Diff_Off in raw form and as a zipped file.
 
 https://westernsydneyedu.sharepoint.com/:f:/r/sites/MoNE2022/Shared%20Documents/General/SimulatedStarRecordings?csf=1&web=1&e=SZCRum
