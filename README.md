@@ -113,38 +113,43 @@ In a neuromorphic camera, each pixel has a stored log intensity (Image below lef
 
 ## Prototype code
 ### V1 Code
-The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room and manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent, as the lighting from the computer monitor constantly altered the illumination levels in the room causing irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera. The code for the prototye was built on the PSEE413 platform and used threads to monitor and accept input changes. In the example below, providing the connection to the camera was live the "6" button could be pressed and providing the th_off Bias was larger than one, it would be reduced. 
+The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room and manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons as they were pushed and the computers monitor were constantly altering the illumination levels in the room causing irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera as viabrations causing the pixels to oscillilate on and off constantly. 
+
+The code for the prototye was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This code was avaliable to be used whn the camera was in a real time live view state. During this time providing no other instructions were running pressing the "6" button would execute the commands providing th_off was greater than 1. The commands would reduce th_off by 1 then set the updated diff_off value by acessing the bias parameters in PSEE413. 
 ```py
-if c == ord("6") and th_off > 1:          # "Look" for an input command from the 6 buttoon and th_off is greater than 1 
+if c == ord("6") and th_off > 1:          # "Look" for an input command from the 6 button and confirm th_off is greater than 1 
         th_off -= 1                       # Reduce th_off by 1
-        camera.set_parameters(            # Open the camera and psee413 parameters of the of the camera and load new th_off values
-            psee413.Parameters(
-                biases = psee413.Biases(
-                    diff_on = th_on,
+        camera.set_parameters(            # Set the camera parameters to:
+            psee413.Parameters(           #     - access from psee413 parameters and biases of the of the camera 
+                biases = psee413.Biases( 
+                    diff_on = th_on,      #     - refresh changes in biases 
                     diff = diff,
                     diff_off = th_off,
                 )
             )
         )
 ```
-This code did evolve to incorpirate some automation which allowed by pushing the "g" button the system would start recording, move, finish recording after the count condition was met and reset. Each time the "g" button was pressed, the Bias would shift by 1 as seen below.
+
+Following the proof of concept an attempt was made to incorpirate some automation into this script. This automation allowed an operator to push the "g" button and the system would increase th_off by 1, create and name an .es file, start recording data to es file and start running gcode command from the CNC controller via GRBL. 
+
 ```py
-    if c == ord("g"):
-            #ser.write(("G00 X10Y10" + "\n").encode()) 
-            th_off += 1
-            name = f'{datetime.datetime.now(tz=datetime.timezone.utc).isoformat().replace("+00:00", "Z"+ str(th_off) + "OFF" + str(th_on)+"ON").replace(":", "-")}.es'
-            camera.start_recording_to(name)
-            recording = True
-            print("Recording to " + name)
-            time.sleep(0.5)
-            with open('C:\\Users\\Josh.F\\Desktop\\19317377\\PG\\Frame design\\Python\\startest.gcode', 'r') as f:
-                for line in f:
-                    print('Sending: ' + line)
-                    ser.write((line + "\n").encode())  # Send g-code block to grbl
-                    time.sleep(0.1)
+  if c == ord("g"):                              # "Look" for an input command from the g button
+    #ser.write(("G00 X10Y10" + "\n").encode())   # This line was commented out as the move instruction was repositioned during the automation process 
+    th_off += 1                                  # increase th_off by 1
+    name = f'{datetime.datetime.now(tz=datetime.timezone.utc).isoformat().replace("+00:00", "Z"+ str(th_off) + "OFF" + str(th_on)+"ON").replace(":", "-")}.es'          # create es file name
+    camera.start_recording_to(name)              # start recording data to the es file 
+    recording = True                             # set recording flag
+    print("Recording to " + name)                # print to terminal "recording to "name""
+    time.sleep(0.5)                              # wait es file to be created/formatted
+    with open('C:\\Users\\Josh.F\\Desktop\\19317377\\PG\\Frame design\\Python\\startest.gcode', 'r') as f: # Open startest gcode file as a read only file and assign it to variable f
+    for line in f:                               # Read each line consecutively from gcode file
+        print('Sending: ' + line)                # Print in terminal line sent
+        ser.write((line + "\n").encode())        # Send line information to GRBL to excute
+        time.sleep(0.1)                          # Wait 100ms to send next line 
     
-            count = 0
+    count = 0                                    # reset counter to 0
 ```
+This semi automated process still had the on going flaws requiring human interaction each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an effency issue with the code. Often the code would become interlocked between 2 steps or would run instructions out of order. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need to be reset. This would in turn also reset the saved log intensity value which had been conditioned to the room. From testing the first 1-2 recording post rest would have additional noise as pixels returned to a normalised state. 
 
 ### V2 Code
 Moving forward it was important to incorpirate a full automation process and improved efficency. To achieve this the new code incorpirated a state machine. the state machine allowed the program to constantly run looking only for changes in variable flags that would be set/reset depending on what stage the process the system was in.
