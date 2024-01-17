@@ -7,8 +7,8 @@ A redesign of the original concept led to the final design. The design allowed f
 
 <figure>
   <p align="center">
-    <img src="ImagePlots/FirstDesign.JPG" alt="Image 1" style="height: 350px;">
-    <img src="ImagePlots/FinalDesign.JPG" alt="Image 2" style="height: 350px;">
+    <img src="ImagePlots/FirstDesign.JPG" alt="Image 1" style="height: 200px;">
+    <img src="ImagePlots/FinalDesign.JPG" alt="Image 2" style="height: 200px;">
   </p>
   <figcaption align="center">Figure 1: Left: Initial concept. Right: Final Design.</figcaption>
 </figure>
