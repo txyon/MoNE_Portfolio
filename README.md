@@ -1,9 +1,9 @@
-# Hey! Is this thing on? Space-based object detection optimisation with neuromorphic cameras
+# Hey! Are you seeing this? Space-based object detection optimisation with neuromorphic cameras 
 
 ## Design, Hardware and Control
 This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below in Figure 1 (Left). The concept's inner ring would have a star pattern drilled into it. Two light sources are mounted between the first and second rings and are orientated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create events across the camera sensor. Due to its complexity of recreating an accurate star map on the curved surface and the limitation of the room being restricted by the size of the inner ring, this design was inadequate.
 
-A redesign of the original concept led to the final design. The design allowed for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected on a flat surface, meaning recreation was much more straightforward.
+A redesign of the original concept led to the final design. The design allowed for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected from a flat surface, making recreation much more straightforward.
 
 <figure>
   <p align="center">
@@ -15,7 +15,7 @@ A redesign of the original concept led to the final design. The design allowed f
 
 .
 
-One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table covering three different lenses at three different rudimentary distances from the star map. As the camera would be passing over the "stars" in the y direction, it was necessary to tune the physical dimensions to this. Ideally, the single stand light should show as a single pixel. With this assumption, using the stand thickness of 0.4mm, a desired FOV in the y direction is calculated by multiplying 0.4 by 720 (sensor pixel height), returning 288mm. The distance between the lens and lights could not be tuned to achieve a measurement as close to this. The actual FOV achieved on the y-axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments.
+One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table covering three lenses at three different rudimentary distances from the star map. As the camera would be passing over the "stars" in the y direction, it was necessary to tune the physical dimensions to this. Ideally, the single stand light should show as a single pixel. With this assumption, using the stand thickness of 0.4mm, a desired FOV in the y direction is calculated by multiplying 0.4 by 720 (sensor pixel height), returning 288mm. The distance between the lens and lights could not be tuned to achieve a measurement as close to this. The actual FOV achieved on the y-axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments.
 
 | Lens | Distance(mm) | Height(mm) | Width(mm) |
 |------|--------------|------------|-----------|
@@ -29,15 +29,16 @@ One of the techniques taught in the neuromorphic sensing unit was lens selection
 | 12mm |     1000     |    356     |    475    |
 | 12mm |     1500     |    534     |    712    |
 
-The driving hardware selected for this project is an ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and an Arduino CNC shield with DRV8825 High Current Drivers. The CNC steppers were controlled using GRBL, sending G-code commands within the python recorder.py scripts. These commands could be sent as a single line in code or called a multi-line g-code file.
+The driving hardware selected for this project is an ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and an Arduino CNC shield with DRV8825 High Current Drivers. The CNC steppers are controlled using GRBL, sending G-code commands within the python recorder.py scripts. These commands could be sent as a single line in code or called a multi-line g-code file.
 
 Below is an example of a single-line instruction. In this example, the carriage is sent the command over serial using ser. write to move from its current position to using G01, a linear (straight line movement), at a feed rate (Speed) of F3000 mm/min to location X200. No Y position is included in this command, so the current Y value is held.
 
 ```py
-    ser.write(("G01 F3000 X200" +"\n").encode())# Send sinle line command to GRBL to move camera to X200  
+    ser.write(("G01 F3000 X200" +"\n").encode())# Send single line command to GRBL to move camera to X200  
 ```
 In order to send a multi-line g-code file over GRBL, the file needs to be opened and read line by line. While running each line, the command is sent using the same user. Write as the example above. A brief wait of 100ms occurs between each line, allowing the Arduino to process and send the command. Below is the code from recorder.py, which runs the homing cycle for the CNC.
 ```py
+# Open homing gcode file as a read only file and assign it to variable f
 with open('WorkingFolderV3\gcode\homing.gcode', 'r') as f:
     for line in f:                          # Read each line consecutively from gcode file
         print('Sending: ' + line)           # Print in terminal line sent
@@ -59,9 +60,9 @@ The image below shows preliminary testing once the frame was set up.
 </p>
 
 ## Star Field
-The star field for this concept is designed on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands being inserted into plywood to replicate the same star pattern. To add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes alloed multiple strands to be inserted to giving the impression of larger/brighter stars. It was important during this step to replicate the ground truth as close as possible to ensure the best chance of optimal optimisation. 
+The star field for this concept is designed on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands inserted into plywood to replicate the same star pattern. In order to add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes allowed multiple strands to be inserted, giving the impression of larger/brighter stars. During this step, it was necessary to replicate the ground truth as closely as possible to ensure the best chance of optimal optimisation. 
 
-The hole configurations with corresponding stands is outlined in the table below:
+The hole configurations with corresponding stands are outlined in the table below:
 
 | Hole Size | Strands |
 |----------|----------|
@@ -75,7 +76,7 @@ The hole configurations with corresponding stands is outlined in the table below
 | 3.2mm    |     8    |
 | 3.75mm   |     9    |
 
-A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board, holding the lighting surface parallel with the lens on the camera reducing visual errors. The following images show the underside and top of the plywood housing the optic strands. On the left, the underside of the ply shows the distribution and sizing of the holes and stand placement. The right shows the final "Star" layout used in the experiments.
+A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board, holding the lighting surface parallel to the lens on the camera, reducing visual errors. The following images show the underside and top of the plywood housing the optic strands. The ply's underside on the left shows the holes' distribution sizing and strand placement. The right shows the final "Star" layout used in the experiments. 
 
 <figure>
   <p align="center">
@@ -85,7 +86,7 @@ A piece of 13mm thick plywood supported the strands as they were fed into the ho
   <figcaption align="center">Figure 1: Left: Underside of plywood, strand distribution. Right: Final "Star" result.</figcaption>
 </figure>
 
-In order to test the accuracy of the replication compared to the ground truth both images were run through astrometry.net (https://nova.astrometry.net/), a website that takes an uploaded image and locates its origin in the sky. As expected the ground truth capture positioned in the expected origin location. When processing the replication search time was longer but it was located and copies the location of orginial. Side by side these images can be told apart with the replecation lacking the enviromental noise that the original has. The next three images show the orgin with the real and fake overlayed and one of the origin by itself.
+In order to test the accuracy of the replication compared to the ground truth, both images were run through astrometry.net (https://nova.astrometry.net/). This website takes an uploaded image and locates its origin in the sky. As expected, the ground truth image was positioned in the origin location in the sky. The replication search time was longer when processing, but it was located and copied to the original location. Side by side, these images can be told apart from the replication, which lacks the environmental noise that the original has. The following three images show the origin with the authentic and fake overlays and one of the origins by itself.
 
 <figure>
   <p align="center">
@@ -104,9 +105,10 @@ In order to test the accuracy of the replication compared to the ground truth bo
 </figure>
 
 ## Camera
-The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in the way they record data as they detect illuminaton changes aschroynsly at a pixel level and return an event with a polarity of either 0 or 1. thes polarities tell if the pixel had a off event (0) where the light on the pixel was reduced frim its current baseline or a on event (1) which is an increase of light acriss the oixel. 
+The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a Sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in how they record data. They detect illumination changes asynchronously at a pixel level and return an "event" with a polarity of either 0 or 1. These polarities tell if the pixel had an off event (0), which occurs when light across the pixel is reduced or an on event (1), which is an increase of light across the pixel. 
 
-The thresholds that determin if the change in light intensity at the pixel warrants an on/;off event are able to be customised. These settings are refered to as Diff_on and Diff_off bias settings, by reducing the threshold the sensor/pixel become increasingly more sensitive as a smaller differene in illumination now causes an event to occur.
+In a neuromorphic camera, each pixel has a stored current log intensity its current baseline value for illumination (this value will constantly change with events). This baseline is then used by the comparators (diff_on and diff_off) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
+
 
 ## Prototype code
 ### V1 Code
