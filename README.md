@@ -366,7 +366,7 @@ The plots above show the filtered event data on each pixel for the entire file. 
 
 Attached below is a link to a dataset containing a complete set of on and off recordings in both CSV and ES form. Referencing this and the file size graphs should allow for predetermined Bias starting points when observing stars/satellites. Depending on the detail needed in the recording using the results above, a tuning on Bias until performance is achieved, then off can be tuned to any setting under the hot pixel threshold, which may vary by camera.
 
-### Dataset
+## Dataset
 
 .ES and CSV files are available using the link below. There are files for both Diff_On and Diff_Off in raw form and as a zipped file.
 
