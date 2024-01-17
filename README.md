@@ -85,26 +85,26 @@ A piece of 13mm thick plywood supported the strands as they were fed into the ho
 
 In order to test the accuracy of the replication compared to the ground truth, both images were run through astrometry.net (https://nova.astrometry.net/). This website takes an uploaded image and locates its origin in the sky. As expected, the ground truth image was positioned in the origin location in the sky. The replication search time was longer when processing, but it was located and copied to the original location. Side by side, these images can be told apart from the replication, which lacks the environmental noise that the original has. The following three images show the origin with the authentic and fake overlays and one of the origins by itself.
 
-<figure>
-  <p align="center">
-    <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 275px;">
-    <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 275px;">
-  </p>
-  <figcaption align="center">Figure 1: Left: Ground truth. Right: Replicated "Star" field.</figcaption>
-</figure>
+<p align="center">
+  <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 275px;">
+  <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 275px;">
+</p>
 
 
-<figure>
-  <p align="center">
-    <img src="ImagePlots/origin.JPG" alt="Image 1" style="height: 400px;">
-  </p>
-  <figcaption align="center">Figure 1: Origin in the sky.</figcaption>
-</figure>
+<p align="center">
+  <img src="ImagePlots/origin.JPG" alt="Image 1" style="height: 300px;">
+</p>
+
 
 ## Camera
 The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a Sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in how they record data. They detect illumination changes asynchronously at a pixel level and return an "event" with a polarity of either 0 or 1. These polarities tell if the pixel had an off event (0), which occurs when light across the pixel is reduced or an on event (1), which is an increase of light across the pixel. 
 
 In a neuromorphic camera, each pixel has a stored current log intensity its current baseline value for illumination (this value will constantly change with events). This baseline is then used by the comparators (diff_on and diff_off) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
+
+<p align="center">
+  <img src="ImagePlots/simplepixel.JPG" alt="Image 1" style="height: 275px;">
+  <img src="ImagePlots/eventdia.JPG" alt="Image 2" style="height: 275px;">
+</p>
 
 
 ## Prototype code
