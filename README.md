@@ -183,10 +183,10 @@ The final code can be broken into two sections. The first is the setup phase, wh
 The second section of the script is the state machine consisting of 7 elements that could be occurring in the process: 
 1. Recording
 2. Save
-3. Checki and has moved (at end position)
-4. Checkii and has moved  (at Start position)
-5. Checki and move to 800 is set
-6. Checkii and move to 200 is set
+3. Checki (end position) and verification camera has moved
+4. Checkii (start position) and verification camera has moved
+5. Checki (end position) and request to move to 800 is set
+6. Checkii (start position) and request to move to 200 is set
 7. homing
 
 ```py
