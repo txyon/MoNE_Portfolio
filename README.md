@@ -111,7 +111,7 @@ In a neuromorphic camera, each pixel has a stored log intensity (Image below lef
 
 
 
-## Prototype code
+## Coding
 ### V1 Code
 The prototype file in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons as they were pushed and the computer's monitor constantly altered the room's illumination levels, causing irregular recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera presenting as vibrations, causing the pixels to oscillate on and off constantly. 
 
