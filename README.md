@@ -86,8 +86,8 @@ A piece of 13mm thick plywood supported the strands as they were fed into the ho
 In order to test the accuracy of the replication compared to the ground truth, both images were run through astrometry.net (https://nova.astrometry.net/). This website takes an uploaded image and locates its origin in the sky. As expected, the ground truth image was positioned in the origin location in the sky. The replication search time was longer when processing, but it was located and copied to the original location. Side by side, these images can be told apart from the replication, which lacks the environmental noise that the original has. The following three images show the origin with the authentic and fake overlays and one of the origins by itself.
 
 <p align="center">
-  <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 275px;">
-  <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 275px;">
+  <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 200px;">
+  <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 200px;">
 </p>
 
 
