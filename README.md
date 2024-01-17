@@ -104,7 +104,7 @@ In order to test the accuracy of the replication compared to the ground truth bo
 </figure>
 
 ## Camera
-The camera used for recordings was the Prophesee EVK4. The EVK4 is a neuromorphic camera with a sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in the way they record data as they detect illuminaton changes aschroynsly at each pixel and return an event with a polarity of either 0 or 1. thes polarities tell if the pixel had a off event (0) where the light on the pixel was reduced frim its current baseline or a on event (1) which is an increase of light acriss the oixel. 
+The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in the way they record data as they detect illuminaton changes aschroynsly at a pixel level and return an event with a polarity of either 0 or 1. thes polarities tell if the pixel had a off event (0) where the light on the pixel was reduced frim its current baseline or a on event (1) which is an increase of light acriss the oixel. 
 
 The thresholds that determin if the change in light intensity at the pixel warrants an on/;off event are able to be customised. These settings are refered to as Diff_on and Diff_off bias settings, by reducing the threshold the sensor/pixel become increasingly more sensitive as a smaller differene in illumination now causes an event to occur.
 
