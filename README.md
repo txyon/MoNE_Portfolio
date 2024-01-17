@@ -1,7 +1,7 @@
-# Hey! Are you seeing this? Space-based object detection optimisation with neuromorphic cameras 
+# Are you seeing this? Space-based object detection optimisation with neuromorphic cameras 
 
 ## Design, Hardware and Control
-This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below in Figure 1 (Left). The concept's inner ring would have a star pattern drilled into it. Two light sources are mounted between the first and second rings and are orientated to illuminate the area between the rings in line with the camera. The inner ring would then be driven to create events across the camera sensor. Due to its complexity of recreating an accurate star map on the curved surface and the limitation of the room being restricted by the size of the inner ring, this design was inadequate.
+This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below in Figure 1 (Left). The concept's inner ring would have a star pattern drilled into it. Two light sources are mounted between the first and second rings. They are orientated to illuminate the area between the rings in line with the camera. Driving the inner ring would create illumination changes across the camera's sensor. Due to the complexity of recreating an accurate star map on the curved surface and the limitation of the room inside the inner ring, this design was inadequate.
 
 A redesign of the original concept led to the final design. The design allowed for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected from a flat surface, making recreation much more straightforward.
 
@@ -26,14 +26,14 @@ One of the techniques taught in the neuromorphic sensing unit was lens selection
 | 12mm |     1000     |    356     |    475    |
 | 12mm |     1500     |    534     |    712    |
 
-The driving hardware selected for this project is an ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and an Arduino CNC shield with DRV8825 High Current Drivers. The CNC steppers are controlled using GRBL, sending G-code commands within the python recorder.py scripts. These commands could be sent as a single line in code or called a multi-line g-code file.
+The driving hardware selected for this project is an ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and an Arduino CNC shield with DRV8825 High Current Drivers. Within the python recorder.py script, G-code is sent to the CNC steppers via GRBL. These commands could be sent as a single line in code or called a multi-line g-code file.
 
 Below is an example of a single-line instruction. In this example, the carriage is sent the command over serial using ser. write to move from its current position to using G01, a linear (straight line movement), at a feed rate (Speed) of F3000 mm/min to location X200. No Y position is included in this command, so the current Y value is held.
 
 ```py
     ser.write(("G01 F3000 X200" +"\n").encode())# Send single line command to GRBL to move camera to X200  
 ```
-In order to send a multi-line g-code file over GRBL, the file needs to be opened and read line by line. While running each line, the command is sent using the same user. Write as the example above. A brief wait of 100ms occurs between each line, allowing the Arduino to process and send the command. Below is the code from recorder.py, which runs the homing cycle for the CNC.
+In order to send a multi-line g-code file over GRBL, the file needs to be opened and read line by line. While running each line, the command is sent using the same ser.write as the example above. A brief wait of 100ms occurs between each line, allowing the Arduino to process and send the command. Below is the code from recorder.py, which runs the homing cycle for the CNC.
 ```py
 # Open homing gcode file as a read only file and assign it to variable f
 with open('WorkingFolderV3\gcode\homing.gcode', 'r') as f:
@@ -50,14 +50,14 @@ G90           % Absolute values
 G00 X750Y700  % move to starting location
 ```
   
-The image below shows preliminary testing once the frame was set up.
+The image below shows preliminary testing on the frame.
 
 <p align="center">
   <img src="ImagePlots/workingdesign.jpg" alt="Working Design" style="width:550px;" />
 </p>
 
 ## Star Field
-The star field for this concept is designed on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands inserted into plywood to replicate the same star pattern. In order to add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes allowed multiple strands to be inserted, giving the impression of larger/brighter stars. During this step, it was necessary to replicate the ground truth as closely as possible to ensure the best chance of optimal optimisation. 
+The star field for this concept is based on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands inserted into plywood to replicate the same star pattern. In order to add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes allowed multiple strands to be inserted, giving the impression of larger/brighter stars. During this step, it was necessary to replicate the ground truth as closely as possible to ensure the best chance of optimal optimisation. 
 
 The hole configurations with corresponding stands are outlined in the table below:
 
@@ -99,23 +99,23 @@ In order to test the accuracy of the replication compared to the ground truth, b
 ## Camera
 The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a Sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in how they record data. They detect illumination changes asynchronously at a pixel level and return an "event" with a polarity of either 0 or 1. These polarities tell if the pixel had an off event (0), which occurs when light across the pixel is reduced or an on event (1), which is an increase of light across the pixel. 
 
-In a neuromorphic camera, each pixel has a stored log intensity (Image below left as ln(i)) a current baseline value for illumination. The baseline resets as the log intensity reaches the set threshold depicted as the dotted line in the image below on the right (upper diagram). This baseline is then used by the comparators (ON and OFF) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
+In a neuromorphic camera, each pixel has a stored log intensity (Image below left as ln(i)), a current baseline value for illumination. The baseline resets as the log intensity reaches the set threshold depicted as the dotted line in the image below on the right (upper diagram). This baseline is then used by the comparators (ON and OFF) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
 
 <p align="center">
   <img src="ImagePlots/simplepixel.JPG" alt="Image 1" style="height: 200px;">
   <img src="ImagePlots/eventdia.JPG" alt="Image 2" style="height: 200px;">
 </p>
 
-<p align="center"><i>Lichtsteiner, P, Posch, C & Delbruck, T 2008, ‘A 128 x 128 120 dB 15 us Latency Asynchronous Temporal Contrast Vision Sensor’, IEEE Journal of Solid-State Circuits, vol. 43, no. 2, pp. 566–576.</i></p>
+<p align="center"><i>Lichtsteiner, P, Posch, C & Delbruck, T 2008, 'A 128 x 128 120 dB 15 us Latency Asynchronous Temporal Contrast Vision Sensor', IEEE Journal of Solid-State Circuits, vol. 43, no. 2, pp. 566–576.</i></p>
 
 
 
 
 ## Prototype code
 ### V1 Code
-The prototype file located in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room and manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons as they were pushed and the computers monitor were constantly altering the illumination levels in the room causing irregularities in the recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera as viabrations causing the pixels to oscillilate on and off constantly. 
+The prototype file in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons as they were pushed and the computer's monitor constantly altered the room's illumination levels, causing irregular recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera presenting as vibrations, causing the pixels to oscillate on and off constantly. 
 
-The code for the prototye was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This code was avaliable to be used whn the camera was in a real time live view state. During this time providing no other instructions were running pressing the "6" button would execute the commands providing th_off was greater than 1. The commands would reduce th_off by 1 then set the updated diff_off value by acessing the bias parameters in PSEE413. 
+The code for the prototype was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This code was available when the camera was in a real-time live-view state. During this time, if no other instructions were running, pressing the "6" button would execute the commands provided th_off was greater than 1. The commands would reduce th_off by one and then set the updated diff_off value by accessing the bias parameters in PSEE413. 
 ```py
 if c == ord("6") and th_off > 1:          # "Look" for an input command from the 6 button and confirm th_off is greater than 1 
         th_off -= 1                       # Reduce th_off by 1
@@ -130,7 +130,7 @@ if c == ord("6") and th_off > 1:          # "Look" for an input command from the
         )
 ```
 
-Following the proof of concept an attempt was made to incorpirate some automation into this script. This automation allowed an operator to push the "g" button and the system would increase th_off by 1, create and name an .es file, start recording data to es file and start running gcode command from the CNC controller via GRBL. 
+Following the proof of concept, an attempt was made to incorporate some automation into this script. This automation allowed an operator to push the "g" button. The system would increase th_off by 1, create and name a .es file, start recording data and run the G-code command from the CNC controller via GRBL. 
 
 ```py
   if c == ord("g"):                              # "Look" for an input command from the g button
@@ -149,16 +149,16 @@ Following the proof of concept an attempt was made to incorpirate some automatio
     
     count = 0                                    # reset counter to 0
 ```
-This semi automated process still had the on going flaws requiring human interaction each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an effency issue with the code. Often the code would become interlocked between 2 steps or would run instructions out of order. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need to be reset. This would in turn also reset the saved log intensity value which had been conditioned to the room. From testing the first 1-2 recording post rest would have additional noise as pixels returned to a normalised state. 
+This semi-automated process still had ongoing flaws requiring human interaction at each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an efficiency issue with the code. The code would often become interlocked between 2 steps or run instructions out of order. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need resetting. This reset would also reset the saved log intensity value that had been conditioned to the room. From testing, the first 1-2 recordings post rest would have additional noise as pixels returned to a normalised state. 
 
 ### V2 Code
-Moving forward it was important to incorpirate a full automation process and improved efficency in both recording consistancy and reduced time to complete a full data set (from 255 > 0). To achieve this a new code was developed using the design of a state machine which also in itself operates ascyronusly. The state machine allowed the program to constantly run looking only for boolean changes in variable flags that would be 1 or 0 depending on what stage the process the system was in. 
+Moving forward, it was essential to incorporate an entire automation process, improve efficiency in recording consistency, and reduce the time to complete a full data set (from 255 > 0). To achieve this, a new code was developed using a state machine's design, which also operates asynchronously. The state machine allowed the program to constantly run, looking only for Boolean changes in variable flags that would be 1 or 0, depending on the stage of the system's process. 
 
-Communication via the camera was now done via the neuromorphic_drivers module (https://github.com/neuromorphicsystems/neuromorphic-rs) which when recording packets from the camera would be stored in an array with each coloumn allocated to a different bias reading. when the script finished (met final condition or timedout) each coloumn of the array would be writtten to a unique csv file. This was done to minimise impact on the running of the script during recordings.
+Communication via the camera was now done via the neuromorphic_drivers module (https://github.com/neuromorphicsystems/neuromorphic-rs), which, when recording packets from the camera, would be stored in an array with each column allocated to a different bias reading. Each array column would be written to a unique CSV file when the script finished (met the final condition or timed out). This process was done to minimise the impact on the running of the script during recordings.
 
-The code is designed to do a single bias recording at a time (diff_off or diff_on) and starting at the greatest threshold (255), the Bias is reduced by 1 each pass untill either it reaches one (this is user defined) or a timeout error would occur. The timeout error is caused by excess data too large for the usb to transfer. This error would always flag as the biases approached 1 as each bias reducion would result in pixels becoming more and more sensitive causing hot pixels. 
+The code is designed to do a single bias recording at a time (diff_off or diff_on). Starting at the greatest threshold (255), the Bias is reduced by one each pass until either it reaches one (this is user-defined) or a timeout error occurs. The timeout error is caused by excess data being too large for the USB to transfer. This error would permanently be flagged as the biases approached one, as each bias reduction would result in pixels becoming more and more sensitive, causing hot pixels. 
 
-The code below shows a small portion (2 states) of the state machine where the script continusly rolls over each of the if statements waiting for the the corresponding flag to be raised. For instance during the recording phase the flag recording will be equal to 1. Therefore each time the script runs over the first line "if recording == 1:" the packets are then loaded into the array "packetdata". The point of this code is for the machine to not have heavy operations to carry out so as much processing can be put into the transfer of data. Thought the writing of events to an array then to a list would become expontionaly more burdensome because of the increasing data filling "reclist" each iteration.
+The code below shows a small portion (2 states) of the state machine. The script continuously rolls over each if statement, waiting for the corresponding flag to be raised. For instance, the flag recording will be equal to 1 during the recording phase. Therefore, each time the script runs over the first line "if recording == 1:" the packets are loaded into the array "packetdata". The point of this code is for the machine not to have heavy operations to carry out so that much processing can be put into the transfer of data. However, writing events to an array and then to a list became exponentially more burdensome because of the increasing data-filling "reclist" for each iteration.
 
 ```py
     if recording == 1:                                    # check recording status 
@@ -176,11 +176,11 @@ The code below shows a small portion (2 states) of the state machine where the s
 ```
 
 ### Current working files
-In an effert to further impove efficency, the v2 code was modified to to save data straight from the camera in a RAW format. By exporting the data in this way negates the need to process the data (parsing) from raw into readable events.  This allowed an additional 4 recordings prior to the timeout error. Another benifit of this change is that it further simplified the script by removing the need to process the event data straight away. The removal of the csv conversion functions reduced the lines of code by approximatly 30 and saved hours of post processing unwanted data. 
+To further improve efficiency, the v2 code was modified to save data straight from the camera in a RAW format. Exporting the data in this way negates the need to process the data (parsing) from raw into readable events. This improvement allowed an additional four recordings prior to the timeout error. Another benefit of this change is that it further simplifies the script by removing the need to process the event data immediately. Removing the CSV conversion functions reduced the lines of code by approximately 30 and saved hours of post-processing unwanted data. 
 
-The final code can be broken into 2 sections. The first is the setup phase which is used to perform single use tasks that do not need to be iterated over each time. Such tasks are establishing connections and loading defualt values to the camera and the CNC controller, Homing the camera carrige and setting initial flag states. The excption to the booklean flags are the variables checki and checkii which are strings used as comparators for determining the position of the carrige by requesting the location status through GRBL. 
+The final code can be broken into two sections. The first is the setup phase, which performs single-use tasks that do not need to be iterated each time. Such tasks are establishing connections and loading default values to the camera and the CNC controller, Homing the camera carriage and setting initial flag states. The exception to the boolean flags is the variables checki and checkii, which are strings used as comparators for determining the position of the carriage by requesting the location status through GRBL. 
 
-The second section of the script is the state machine consisting of 7 elements that could be occuring in the process: 
+The second section of the script is the state machine consisting of 7 elements that could be occurring in the process: 
 1. Recording
 2. Save
 3. Checki and has moved (at end position)
