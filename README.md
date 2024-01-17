@@ -5,15 +5,12 @@ This experiment aims to track the effects manipulating a neuromorphic camera's b
 
 A redesign of the original concept led to the final design. The design allowed for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected from a flat surface, making recreation much more straightforward.
 
-<figure>
-  <p align="center">
-    <img src="ImagePlots/FirstDesign.JPG" alt="Image 1" style="height: 300px;">
-    <img src="ImagePlots/FinalDesign.JPG" alt="Image 2" style="height: 300px;">
-  </p>
-  <figcaption align="center">Figure 1: Left: Initial concept. Right: Final Design.</figcaption>
-</figure>
 
-.
+<p align="center">
+  <img src="ImagePlots/FirstDesign.JPG" alt="Image 1" style="height: 300px;">
+  <img src="ImagePlots/FinalDesign.JPG" alt="Image 2" style="height: 300px;">
+</p>
+
 
 One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table covering three lenses at three different rudimentary distances from the star map. As the camera would be passing over the "stars" in the y direction, it was necessary to tune the physical dimensions to this. Ideally, the single stand light should show as a single pixel. With this assumption, using the stand thickness of 0.4mm, a desired FOV in the y direction is calculated by multiplying 0.4 by 720 (sensor pixel height), returning 288mm. The distance between the lens and lights could not be tuned to achieve a measurement as close to this. The actual FOV achieved on the y-axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments.
 
