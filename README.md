@@ -77,8 +77,8 @@ A piece of 13mm thick plywood supported the strands as they were fed into the ho
 
 <figure>
   <p align="center">
-    <img src="ImagePlots/Undersizeoptics.jpg" alt="Underside plywood" style="height: 300px;">
-    <img src="ImagePlots/SimulatedStarfield.jpg" alt="Finished replication" style="height: 300px;">
+    <img src="ImagePlots/Undersizeoptics.jpg" alt="Underside plywood" style="height: 275px;">
+    <img src="ImagePlots/SimulatedStarfield.jpg" alt="Finished replication" style="height: 275px;">
   </p>
   <figcaption align="center">Figure 1: Left: Underside of plywood, strand distribution. Right: Final "Star" result.</figcaption>
 </figure>
@@ -87,8 +87,8 @@ In order to test the accuracy of the replication compared to the ground truth, b
 
 <figure>
   <p align="center">
-    <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 350px;">
-    <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 350px;">
+    <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 275px;">
+    <img src="ImagePlots/fakeorigin.JPG" alt="Image 2" style="height: 275px;">
   </p>
   <figcaption align="center">Figure 1: Left: Ground truth. Right: Replicated "Star" field.</figcaption>
 </figure>
