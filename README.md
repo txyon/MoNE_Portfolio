@@ -307,32 +307,14 @@ with nd.open(raw=True) as device:
     print('done')                                           # Programed finished
 ```
 ## Interesting Data
+Below are 4 line graphs comparing bias setting to file size:
+  - First is diff_off bias setting 255 > 156.
+  - Second is diff_off 155 > 48.
+  - Third is diff_on 255 > 156.
+  - Fourth is diff_on 155 > 43
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-The file sizes relative to Bias can be seen below. 
+Interstingly the line graph for diff_off starts decreaseing till it reaches 134 then slowly rises until it gets a hot pixel at 55 (This was a constant occurance accross 3 datasets). This was unexpected as the belief was for the line to be somewhat linear till hot pixels were detected similar to what is observed in the diff_on graphs. 
+The hot pixel characteristics of on vs off were also interesting. As displayed in the graphs off had a sudden single pixel with over a million events. This differed from the on hot pixels where they slowy grew as the bias changed. The first instance of a hot pixel in the on bias was when it was set to 70 but it started off with only a hunderd more events then the rest and slowly grew.  
 
 ### Diff_off File size (MB) vs Bias
 <p align="center">
@@ -350,12 +332,8 @@ The file sizes relative to Bias can be seen below.
   <img src="ImagePlots/Diff_On_File_Size_155_43.png" alt="Experimental Setup" style="width:100%;" />
 </p>
 
-### Plot Discussion Points
-- In both plots the first file size is quite large compared to the subsequent files. This is due to the pixels still leveling out after ambient light being let     into the room with the door being open and closed by the operator.
-- In Diff_off the file size interestingly continues to decresases to a bias of 136 before it begins to increase again.
-- When diff_off Bias reaches 55, the sharp spike is caused by a single hot pixel. These hot pixels continue to grow in the remianing files.
-- The diff_on file size depicts what would be expected as the threshold is reduced each run. The file size can be seen to be growing constantly until the Bias reaches 58 at which point file size starts to grow exponetioaly.
-The plots above offer some intersting insights into how the bias effect file size. Under these conditions diff_off has an interesting occurance where less data is generated than at 255 which should be the largest threshold. Aditionally the hot pixel scenario comes in with immediate effect with no warning. Diff_on on the other hand has a nice linear data growth until 58 where the data size become more exponential, interestingly the hot pixel started at 70.
+
+
 
 
 
