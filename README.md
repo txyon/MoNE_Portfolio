@@ -99,12 +99,16 @@ In order to test the accuracy of the replication compared to the ground truth, b
 ## Camera
 The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a Sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in how they record data. They detect illumination changes asynchronously at a pixel level and return an "event" with a polarity of either 0 or 1. These polarities tell if the pixel had an off event (0), which occurs when light across the pixel is reduced or an on event (1), which is an increase of light across the pixel. 
 
-In a neuromorphic camera, each pixel has a stored current log intensity its current baseline value for illumination (this value will constantly change with events). This baseline is then used by the comparators (diff_on and diff_off) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
+In a neuromorphic camera, each pixel has a stored log intensity (Image below left as ln(i)) a current baseline value for illumination. The baseline resets as the log intensity reaches the set threshold depicted as the dotted line in the image below on the right (upper diagram). This baseline is then used by the comparators (ON and OFF) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
 
 <p align="center">
   <img src="ImagePlots/simplepixel.JPG" alt="Image 1" style="height: 200px;">
   <img src="ImagePlots/eventdia.JPG" alt="Image 2" style="height: 200px;">
 </p>
+
+<p align="center"><i>Lichtsteiner, P, Posch, C & Delbruck, T 2008, ‘A 128 x 128 120 dB 15 us Latency Asynchronous Temporal Contrast Vision Sensor’, IEEE Journal of Solid-State Circuits, vol. 43, no. 2, pp. 566–576.</i></p>
+
+
 
 
 ## Prototype code
