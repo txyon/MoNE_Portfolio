@@ -1,18 +1,20 @@
 # Are you seeing this? Space-based object detection optimisation with neuromorphic cameras 
 
 ## Design, Hardware and Control
-This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below (Left). The concept's inner ring would have a star pattern machined into it. Two light sources are mounted between the first and second rings and are orientated to illuminate the area between the rings in line with the camera. Driving the inner ring would create illumination changes across the camera's sensor. Due to the complexity of recreating an accurate star map on the curved surface and the limitation of the room inside the inner ring, this design was inadequate.
-
-A redesign of the original concept led to the current design. The new design allows for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected from a flat surface, reducing many complexities of the concept.
-
+This experiment aims to track what effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster (or vice versa) in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below. The concept's inner ring would have a star pattern machined into it. Two light sources are mounted between the first and second rings and are orientated to illuminate the area between the rings in line with the camera. Driving the inner ring would create illumination changes across the camera's sensor from the light coming through the holes. Due to the complexity of recreating an accurate star map on the curved surface and the limitation of the room inside the inner ring, this design was inadequate.
 
 <p align="center">
   <img src="ImagePlots/FirstDesign.JPG" alt="Image 1" style="height: 300px;">
-  <img src="ImagePlots/FinalDesign.JPG" alt="Image 2" style="height: 300px;">
 </p>
 
+A redesign of the original concept led to the current design below (cad design on left and physical on right). The new design allows for versatility in mounting options and heights. These improvements also allowed the star map to be projected from a flat surface, reducing many complexities of the orginal design.
 
-One of the techniques taught in the neuromorphic sensing unit was lens selection and Field of View (FOV). Below is a table covering three lenses at three different rudimentary distances from the star map. As the camera would be passing over the "stars" in the y direction, it was necessary to tune the physical dimensions to this. Ideally, the single stand light should show as a single pixel. With this assumption, using the stand thickness of 0.4mm, a desired FOV in the y direction is calculated by multiplying 0.4 by 720 (sensor pixel height), returning 288mm. The distance between the lens and lights could not be tuned to achieve a measurement as close to this. The actual FOV achieved on the y-axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments.
+<p align="center">
+  <img src="ImagePlots/FinalDesign.JPG" alt="Image 1" style="height: 400px;">
+  <img src="ImagePlots/ExperimentSetup.jpg" alt="Image 2" style="height: 400px;">
+</p>
+
+An important aspect of this experiment was lens selection and Field of View (FOV). Below is a table covering three lenses at three different rudimentary distances from the star map. As the camera would be passing over the "stars" in the y direction, it was necessary to tune the physical dimensions to this. Ideally, the single stand light should show as a single light source (1 pixel). With this, using the stand thickness of 0.4mm, a desired FOV in the y direction is calculated by multiplying 0.4 by 720 (sensor pixel height), returning 288mm. After tuning the optics the actual FOV achieved on the y-axis using a 12mm lens was 259mm due to the constraints in the fixed point height adjustments.
 
 | Lens | Distance(mm) | Height(mm) | Width(mm) |
 |------|--------------|------------|-----------|
@@ -28,12 +30,14 @@ One of the techniques taught in the neuromorphic sensing unit was lens selection
 
 The driving hardware selected for this project is an ACRO 1500mm x 1500mm CNC Kit (https://www.makerstore.com.au/product/kit-acro-1515-s/) and an Arduino CNC shield with DRV8825 High Current Drivers. Within the python recorder.py script, G-code is sent to the CNC steppers via GRBL. These commands could be sent as a single line in code or called a multi-line g-code file.
 
-Below is an example of a single-line instruction. In this example, the carriage is sent the command over serial using ser. write to move from its current position to using G01, a linear (straight line movement), at a feed rate (Speed) of F3000 mm/min to location X200. No Y position is included in this command, so the current Y value is held.
+Below is an example of a single-line instruction. In this example, the carriage is sent the command over serial using ser.write to move from its current position to using G01, a linear (straight line movement), at a feed rate (Speed) of F3000 mm/min to location X200. No Y position is included in this command, so the current Y value is held.
 
 ```py
     ser.write(("G01 F3000 X200" +"\n").encode())# Send single line command to GRBL to move camera to X200  
 ```
-In order to send a multi-line g-code file over GRBL, the file needs to be opened and read line by line. While running each line, the command is sent using the same ser.write as the example above. A brief wait of 100ms occurs between each line, allowing the Arduino to process and send the command. Below is the code from recorder.py, which runs the homing cycle for the CNC.
+
+In order to send a multi-line g-code file over GRBL, the file needs to be opened and read line by line. While running each line, the command is sent using the same ser.write instruction as the above. A brief wait of 100ms occurs between each line, allowing the Arduino to process and send the command out. Below is the code from recorder.py, which runs the homing cycle for the CNC.
+
 ```py
 # Open homing gcode file as a read only file and assign it to variable f
 with open('WorkingFolderV3\gcode\homing.gcode', 'r') as f:
@@ -42,14 +46,16 @@ with open('WorkingFolderV3\gcode\homing.gcode', 'r') as f:
         ser.write((line + "\n").encode())   # Send line information to GRBL to excute
         time.sleep(0.1)                     # Wait 100ms to send next line 
 ```
-Below is the homing. gcode file called above. 4 commands are saved, which prepare the CNC once the script is first run. These commands reset the limits and positioning of the carriage and set it to its "Ready" state.
+
+Below is the homing.gcode file called in the code above. 4 commands are saved, which prepare the CNC once the script is first run. These commands reset the limits and positioning of the carriage and set it to its "Ready" state.
+
 ```
 $H            % Start homing cycle
 G92 X0 Y0     % Set work-coordinate offset
 G90           % Absolute values
 G00 X750Y700  % move to starting location
 ```
-  
+
 The image below shows preliminary testing on the frame.
 
 <p align="center">
@@ -57,7 +63,7 @@ The image below shows preliminary testing on the frame.
 </p>
 
 ## Star Field
-The star field for this concept is based on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands inserted into plywood to replicate the same star pattern. In order to add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes allowed multiple strands to be inserted, giving the impression of larger/brighter stars. During this step, it was necessary to replicate the ground truth as closely as possible to ensure the best chance of optimal optimisation. 
+The star field for this concept is based on previously captured ground truth data of the star Mu Velorum and its surroundings. The reconstructed starfield consists of fibre optic strands inserted into plywood to replicate the same star pattern. In order to add variance in sizes and illumination of the "stars" to better match the example, different-sized holes were drilled into the plywood board. These holes allowed multiple strands to be inserted, giving the impression of larger/brighter stars. During this step, it was necessary to replicate the ground truth as closely as possible to ensure the best chance of detection optimisation. 
 
 The hole configurations with corresponding stands are outlined in the table below:
 
@@ -73,7 +79,7 @@ The hole configurations with corresponding stands are outlined in the table belo
 | 3.2mm    |     8    |
 | 3.75mm   |     9    |
 
-A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board, holding the lighting surface parallel to the lens on the camera, reducing visual errors. The following images show the underside and top of the plywood housing the optic strands. The ply's underside on the left shows the holes' distribution sizing and strand placement. The right shows the final "Star" layout used in the experiments. 
+A piece of 13mm thick plywood supported the strands as they were fed into the holes. This support held the fibres perpendicular to the top face of the board, holding the lighting surface parallel to the lens on the camera, reducing visual errors. The following images show the underside and top of the plywood. The ply's underside on the left shows the holes' distribution sizing and strand placement. The right shows the final "Star" layout used in the experiments. 
 
 <figure>
   <p align="center">
@@ -83,7 +89,7 @@ A piece of 13mm thick plywood supported the strands as they were fed into the ho
   <figcaption align="center">Figure 1: Left: Underside of plywood, strand distribution. Right: Final "Star" result.</figcaption>
 </figure>
 
-In order to test the accuracy of the replication compared to the ground truth, both images were run through astrometry.net (https://nova.astrometry.net/). This website takes an uploaded image and locates its origin in the sky. As expected, the ground truth image was positioned in the origin location in the sky. The replication search time was longer when processing, but it was located and copied to the original location. Side by side, these images can be told apart from the replication, which lacks the environmental noise that the original has. The following three images show the origin with the authentic and fake overlays and one of the origins by itself.
+In order to test the accuracy of the replication compared to the ground truth, both images were run through astrometry.net (https://nova.astrometry.net/). This website takes an uploaded image and locates its origin in the sky. As expected, the ground truth image was positioned in its origin location. The replication search time was longer when processing, but it was located and copied to the correct location. Side by side, these images can be told apart, the "fake" lacks the environmental noise and some of the duller stars that the original has. The following three images show the origin with the authentic (top left) and fake (top right) overlays and one of the origin (bottom).
 
 <p align="center">
   <img src="ImagePlots/realorigin.JPG" alt="Image 1" style="height: 275px;">
@@ -95,11 +101,10 @@ In order to test the accuracy of the replication compared to the ground truth, b
   <img src="ImagePlots/origin.JPG" alt="Image 1" style="height: 300px;">
 </p>
 
-
 ## Camera
 The camera used for recordings was a Prophesee EVK4. The EVK4 is a neuromorphic camera with a Sony IMX636 HD (720x1280 pixel) sensor. Neuromorphic cameras are unique in how they record data. They detect illumination changes asynchronously at a pixel level and return an "event" with a polarity of either 0 or 1. These polarities tell if the pixel had an off event (0), which occurs when light across the pixel is reduced or an on event (1), which is an increase of light across the pixel. 
 
-In a neuromorphic camera, each pixel has a stored log intensity (Image below left as ln(i)), a current baseline value for illumination. The baseline resets as the log intensity reaches the set threshold depicted as the dotted line in the image below on the right (upper diagram). This baseline is then used by the comparators (ON and OFF) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more significant light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
+In a neuromorphic camera, each pixel has a stored log intensity (Image below left as ln(i)) which is the current baseline value for illumination. This baseline resets as the log intensity reaches the set threshold shown as the dotted line in the image below on the right (upper diagram). This baseline is then used by the comparators (ON and OFF) to compare itself against their threshold values. These thresholds are user-defined by the diff_on and diff_off Bias, where larger values in these biases would require more light variance across the pixel before breaching the threshold and registering an event. The greater the bias value (255 max), the less sensitive (detail) the pixel, resulting in fewer events. As sensitivity is increased, data size and rate follow. This experiment aims to find this "happy medium" between sensitivity and data rate. 
 
 <p align="center">
   <img src="ImagePlots/simplepixel.JPG" alt="Image 1" style="height: 200px;">
@@ -108,14 +113,12 @@ In a neuromorphic camera, each pixel has a stored log intensity (Image below lef
 
 <p align="center"><i>Lichtsteiner, P, Posch, C & Delbruck, T 2008, 'A 128 x 128 120 dB 15 us Latency Asynchronous Temporal Contrast Vision Sensor', IEEE Journal of Solid-State Circuits, vol. 43, no. 2, pp. 566–576.</i></p>
 
-
-
-
 ## Coding
 ### V1 Code
-The prototype file in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings, and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons as they were pushed and the computer's monitor constantly altered the room's illumination levels, causing irregular recordings. Though as a proof of concept, the design operated as desired with minimal/no effect from the stepper motors during operation seen in the camera presenting as vibrations, causing the pixels to oscillate on and off constantly. 
+The prototype file in the "Old Work V1" folder was used for initial testing. This file required an operator to sit in the room, manually increase/decrease bias settings, start/stop recordings and send GRBL commands. This manual operation was not efficient or consistent. The lighting from the backlit buttons on the keyboard as they were pushed and the computer's monitor constantly altered the room's illumination levels, causing irregularities in the recordings. Though as a proof of concept, the design operated as desired with no visable effect from the stepper motors during operation. This effect would have been seen in the camera presenting as vibrations, causing the pixels to oscillate on and off constantly. 
 
-The code for the prototype was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This code was available when the camera was in a real-time live-view state. If no other instructions were running during this time, pressing the "6" button would execute the commands provided th_off was greater than 1. The commands would reduce th_off by one and then set the updated diff_off value by accessing the bias parameters in PSEE413. 
+The code for the prototype was built on the PSEE413 platform and used threads to monitor for inputs from the operator. One of these inputs is seen in the example below. This snippet was available to run when the camera was in a real-time live-view state. If no other instructions were running during this time, pressing the "6" button would execute the commands provided th_off was greater than 1. The commands would reduce th_off by one and then set the updated diff_off value by accessing the bias parameters in PSEE413. 
+
 ```py
 if c == ord("6") and th_off > 1:          # "Look" for an input command from the 6 button and confirm th_off is greater than 1 
         th_off -= 1                       # Reduce th_off by 1
@@ -130,7 +133,7 @@ if c == ord("6") and th_off > 1:          # "Look" for an input command from the
         )
 ```
 
-Following the proof of concept, an attempt was made to incorporate some automation into this script. This automation allowed an operator to push the "g" button. The system would increase th_off by 1, create and name a .es file, start recording data and run the G-code command from the CNC controller via GRBL. 
+Following the proof of concept, an attempt was made to incorporate some automation into this script. This automation allowed an operator to push the "g" button. Then the system would increase th_off by 1, create and name and .es file, start recording data and run the G-code command from the CNC controller via GRBL. 
 
 ```py
   if c == ord("g"):                              # "Look" for an input command from the g button
@@ -149,16 +152,16 @@ Following the proof of concept, an attempt was made to incorporate some automati
     
     count = 0                                    # reset counter to 0
 ```
-This semi-automated process still had ongoing flaws requiring human interaction at each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an efficiency issue with the code. The code would often become interlocked between 2 steps or run instructions out of order. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need resetting. This reset would also reset the saved log intensity value conditioned to the room. From testing, the first 1-2 recordings post rest would have additional noise as pixels returned to a normalised state. 
+This semi-automated process still had ongoing flaws requiring human interaction at each iteration and the negative impacts from the illumination noise caused by the keyboard and monitor. This testing also outlined an efficiency issue with the code. The code would often become interlocked between 2 steps or run instructions out of order if the g button was pressed during another operation. Processing the recording was also cumbersome on the script and would often cause premature timeout errors on large thresholds. The problem with timeout errors is that the camera would need resetting to continue. This reset would also reset the saved log intensity value conditioned to the room. From testing, the first 1-2 recordings post reset would have additional noise as pixels returned to a normalised state. 
 
 ### V2 Code
 Moving forward, it was essential to incorporate an entire automation process, improve efficiency in recording consistency, and reduce the time to complete a full data set (from 255 > 0). To achieve this, a new code was developed using a state machine's design, which also operates asynchronously. The state machine allowed the program to constantly run, looking only for Boolean changes in variable flags that would be 1 or 0, depending on the stage of the system's process. 
 
-Communication via the camera was now done via the neuromorphic_drivers module (https://github.com/neuromorphicsystems/neuromorphic-rs), which, when recording packets from the camera, would be stored in an array with each column allocated to a different bias reading. Each array column would be written to a unique CSV file when the script finished (met the final condition or timed out). This process was done to minimise the impact on the running of the script during recordings.
+Communication via the camera was now done via the neuromorphic_drivers module (https://github.com/neuromorphicsystems/neuromorphic-rs), which, when recording packets from the camera, would be stored in an array with each column allocated to a different bias reading. Each array column would be written to a unique CSV file when the script finished (met the final condition or timed out). This process was done to minimise the impact on the script during recordings.
 
-The code is designed to do a single bias recording at a time (diff_off or diff_on). Starting at the greatest threshold (255), the Bias is reduced by one each pass until either it reaches one (this is user-defined) or a timeout error occurs. The timeout error is caused by excess data being too large for the USB to transfer. This error would permanently be flagged as the biases approached one, as each bias reduction would result in pixels becoming more and more sensitive, causing hot pixels. 
+The code is designed to do a single bias recording at a time (diff_off or diff_on). Starting at the greatest threshold (255), the Bias is reduced by one each pass until either it reaches one (this is user-defined) or a timeout error occurs. The timeout error is caused by excess data being too large for the USB to transfer due to a backlog build up. This error would permanently flag as the biases approached one (same for all datasets), as each bias reduction would result in pixels becoming more and more sensitive, causing hot pixels. 
 
-The code below shows a small portion (2 states) of the state machine. The script continuously rolls over each if statement, waiting for the corresponding flag to be raised. For instance, the flag recording will equal one during the recording phase. Therefore, each time the script runs over the first line "if recording == 1:" the packets are loaded into the array "packetdata". The point of this code is for the machine not to have heavy operations to carry out so that much processing can be put into the transfer of data. However, writing events to an array and then to a list became exponentially more burdensome because of the increasing data-filling "reclist" for each iteration.
+The code below shows a small portion (2 states) of the state machine. The script continuously rolls over each if statement, waiting for the corresponding flag to be raised. For instance, the flag recording will equal one during the recording phase. Therefore, each time the script runs over the first line "if recording == 1:" the packets are loaded into the end of array "packetdata". The point of this code is for the machine not to have heavy operations to carry out resulting in quick cycle time through the loop. This extra speed means that packets are sent more regularly reducing backlog build up. However, writing events to an array and then to a list became exponentially more burdensome because of the increasing memory size "reclist" for each iteration.
 
 ```py
     if recording == 1:                                    # check recording status 
@@ -176,18 +179,18 @@ The code below shows a small portion (2 states) of the state machine. The script
 ```
 
 ### Current working files
-To further improve efficiency, the v2 code was modified to save data straight from the camera in a RAW format. Exporting the data in this way negates the need to process the data (parsing) from raw into readable events. This improvement allowed an additional four recordings prior to the timeout error. Another benefit of this change is that it further simplifies the script by removing the need to process the event data immediately. Removing the CSV conversion functions reduced the lines of code by approximately 30 and saved hours of post-processing unwanted data. 
+To further improve efficiency, the v2 code was modified to save data straight from the camera in a RAW file format. Exporting the data in this way negates the need to process the data (parsing) from raw into readable events. This improvement allowed an additional four recordings prior to the timeout error. Another benefit of this change is that it further simplifies the script by removing the need to process the event data immediately. By removing the CSV conversion functions reduced the lines of code by approximately 30 and saved hours of processing data before the script would end. 
 
-The final code can be broken into two sections. The first is the setup phase, which performs single-use tasks that do not need to be iterated each time. Such tasks are establishing connections and loading default values to the camera and the CNC controller, Homing the camera carriage and setting initial flag states. The exception to the boolean flags is the variables checki and checkii, which are strings used as comparators for determining the position of the carriage by requesting the location status through GRBL. 
+The final code can be broken into two sections. The first is the setup phase, which performs single-use tasks that do not need to be iterated each time. Such tasks are establishing connections and loading default values to the camera and the CNC controller, Homing the camera carriage and setting initial flag states (Bool). The exception to the boolean flags is the variables checki and checkii, which are strings used as comparators for determining the position of the carriage by requesting the location status through GRBL. 
 
-The second section of the script is the state machine consisting of 7 elements that could be occurring in the process: 
-1. Recording
-2. Save
-3. Checki (end position) and verification camera has moved
-4. Checkii (start position) and verification camera has moved
-5. Checki (end position) and request to move to 800 is set
-6. Checkii (start position) and request to move to 200 is set
-7. homing
+The second section of the script is the state machine consisting of 7 elements that could be occurring on the machine: 
+| 1. | if recording == 1                       | Recording state | 
+| 2. | if save == 1                            | Save request |
+| 3. | if checkI in pos and moving == 1        | Check camera has arrived at end position after moving |
+| 4. | if checkII in pos and moving == 1       | Check camera has arrived at start position after moving |
+| 5. | if checkI not in pos and move800 == 1   | Check camera has left end position after instruction to move to start |
+| 6. | if checkII not in pos and move200 == 1  | Check camera has left start position after instruction to move to end |
+| 7. | if homing == 1 and checkII in pos       | Homing status complete and is at start position |
 
 ```py
 ### Dependencies
@@ -313,8 +316,8 @@ Below are 4 line graphs comparing the Bias setting to file size:
   - Third is diff_on 255 > 156.
   - Fourth is diff_on 155 > 43
 
-Interestingly, the line graph for diff_off starts decreasing till it reaches 134, then slowly rises until it gets a hot pixel at 55 (This was a constant occurrence across three datasets). This valley was unexpected as the belief was for the line to be somewhat linear till hot pixels were detected, similar to what was observed in the diff_on graphs. 
-The hot pixel characteristics of on vs off were also interesting. As displayed in the graphs, diff_off had a sudden single pixel with over a million events, differing from the diff_on hot pixels that slowly grew as the Bias changed. The first instance of a hot pixel in the diff_on Bias was when it was set to 70, but it started with only a hundred more events than the rest and slowly grew.  
+Interestingly, the line graph for diff_off starts decreasing till it reaches a level of 134, then slowly rises until a hot pixel occurs at level 55 (This fall then rise in file size was a constant occurrence across three datasets). This valley was unexpected as the belief was for the line to be increasing (somewhat) linearly till hot pixels were detected, similar to what was observed in the diff_on graphs. 
+The hot pixel characteristics of on vs off were also interesting in this enviroment. As displayed in the graphs, diff_off had a sudden single pixel with over a million events, differing from the diff_on hot pixels that slowly grew as the Bias changed. The first instance of a hot pixel in the diff_on Bias was when it was set to 70, but it started with only a hundred more events than the rest and slowly grew.  
 
 ### Diff_off File size (MB) vs Bias
 <p align="center">
@@ -332,7 +335,7 @@ The hot pixel characteristics of on vs off were also interesting. As displayed i
   <img src="ImagePlots/Diff_On_File_Size_155_43.png" alt="Experimental Setup" style="width:100%;" />
 </p>
 
-A hot pixel detector and filter were constructed to analyse the data in these recordings and provide the following results. Below is a section of untouched events from diff_off 55 after being processed. Immediately, attention is drawn to the upper right graph where a single line can be seen with 1.5 million off events, a hot pixel. This pixel also causes the sensor data array on the top left black, except for a single pixel. There is some rudimentary filtering in this section to remove the hot pixel, and the results are seen in the bottom plots. On the bottom right is the sensor data, filling each pixel with events. On the right is the filtered flattened plot, which still shows the off events to have more weight, which is expected with such a vast difference in the bias settings. 
+A hot pixel detector and filter were constructed to analyse the data in these recordings and provide the following results. Below is a section of untouched events from diff_off 55 after being processed. Immediately, attention is drawn to the upper right flattened sensor array graph where a single line can be seen with appoximatly 1.5 million off events, a hot pixel. This pixel also causes the sensor data array on the top left black, except for a single pixel. There is some rudimentary filtering in this section to remove the hot pixel, and the results are seen in the bottom plots. On the bottom left is the sensor data, filling each pixel with events. On the right is the filtered flattened plot, which still shows the off events to have more weight, which is expected with such a vast difference in the bias settings. 
 
 <p align="center">
   <img src="ImagePlots/prefilthot.png" alt="Experimental Setup" style="width:100%;" />
@@ -346,12 +349,14 @@ Below is the time surface for the unfiltered events. The single line seen is the
 
 Filtering takes place using the code below, which initially samples the first 1000 events for more than one on a single pixel. These x and y locations are then removed from the CSV, and a second filtering segment runs, which accounts for the whole file. The second filter removes any pixel with more hits than the total number of events in the file multiplied by 0.005%.
 The results from this filter are below:
+
 ```
 29944689
      x    y  count
 0  309  546    993
 613538
 ```
+
 The first line (29944689) is the amount of events in the unfiltered file. The second and third lines are the returned results of the first 1000 events check. The hot pixel was responsible for 993 out of the first 1000. Finally, the fourth line shows the remaining events after filtering. 
 
 <p align="center">
@@ -364,10 +369,8 @@ The plots above show the filtered event data on each pixel for the entire file. 
   <img src="ImagePlots/posttshot.png" alt="Experimental Setup" style="width:100%;" />
 </p>
 
-
-
 ## Dataset
-Attached below is a link to a dataset containing a complete set of on and off recordings in both CSV and ES form. Referencing this and the file size graphs should allow for predetermined Bias starting points when observing stars/satellites. Depending on the detail needed in the recording using the results above, a tuning on Bias until performance is achieved, then off can be tuned to any setting under the hot pixel threshold, which may vary by camera.
+Attached below is a link to a dataset containing a complete set of on and off recordings in both CSV and ES form. Referencing this and the file size graphs should allow for predetermined Bias starting points when observing stars/satellites. Depending on the detail needed in the recording, based on the results above tune the diff_on Bias until desired performance is achieved, then off can be adjusted to any setting under the hot pixel threshold, which may vary by camera.
 
 .ES and CSV files are available using the link. There are files for both Diff_On and Diff_Off in raw form and as a zipped file.
 
