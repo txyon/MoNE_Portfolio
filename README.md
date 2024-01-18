@@ -1,9 +1,9 @@
 # Are you seeing this? Space-based object detection optimisation with neuromorphic cameras 
 
 ## Design, Hardware and Control
-This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below in Figure 1 (Left). The concept's inner ring would have a star pattern drilled into it. Two light sources are mounted between the first and second rings. They are orientated to illuminate the area between the rings in line with the camera. Driving the inner ring would create illumination changes across the camera's sensor. Due to the complexity of recreating an accurate star map on the curved surface and the limitation of the room inside the inner ring, this design was inadequate.
+This experiment aims to track the effects manipulating a neuromorphic camera's biases has on object detection. The concept was to have a neuromorphic camera move across a replicated star cluster or vice versa in a controlled low-light environment. The initial proposal for this design had a fixed camera mounted in the centre of two rings, as seen below in Figure 1 (Left). The concept's inner ring would have a star pattern machined into it. Two light sources are mounted between the first and second rings and are orientated to illuminate the area between the rings in line with the camera. Driving the inner ring would create illumination changes across the camera's sensor. Due to the complexity of recreating an accurate star map on the curved surface and the limitation of the room inside the inner ring, this design was inadequate.
 
-A redesign of the original concept led to the final design. The design allowed for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected from a flat surface, making recreation much more straightforward.
+A redesign of the original concept led to the current design. The new design allows for versatility in mounting options and adjustable heights. These improvements also allowed the star map to be projected from a flat surface, reducing many complexities of the concept.
 
 
 <p align="center">
