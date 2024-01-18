@@ -364,10 +364,11 @@ The plots above show the filtered event data on each pixel for the entire file. 
   <img src="ImagePlots/posttshot.png" alt="Experimental Setup" style="width:100%;" />
 </p>
 
-Attached below is a link to a dataset containing a complete set of on and off recordings in both CSV and ES form. Referencing this and the file size graphs should allow for predetermined Bias starting points when observing stars/satellites. Depending on the detail needed in the recording using the results above, a tuning on Bias until performance is achieved, then off can be tuned to any setting under the hot pixel threshold, which may vary by camera.
+
 
 ## Dataset
+Attached below is a link to a dataset containing a complete set of on and off recordings in both CSV and ES form. Referencing this and the file size graphs should allow for predetermined Bias starting points when observing stars/satellites. Depending on the detail needed in the recording using the results above, a tuning on Bias until performance is achieved, then off can be tuned to any setting under the hot pixel threshold, which may vary by camera.
 
-.ES and CSV files are available using the link below. There are files for both Diff_On and Diff_Off in raw form and as a zipped file.
+.ES and CSV files are available using the link. There are files for both Diff_On and Diff_Off in raw form and as a zipped file.
 
 https://westernsydneyedu.sharepoint.com/:f:/r/sites/MoNE2022/Shared%20Documents/General/SimulatedStarRecordings?csf=1&web=1&e=SZCRum
